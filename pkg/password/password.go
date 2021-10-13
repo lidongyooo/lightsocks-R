@@ -25,6 +25,7 @@ func (p *password) String() string {
 func RandPassword() string {
 	// 随机生成一个由  0~255 组成的 byte 数组
 	intArr := rand.Perm(PASSWORDLENGTH)
+
 	password := &password{}
 	for i, v := range intArr {
 		password[i] = byte(v)
@@ -33,5 +34,6 @@ func RandPassword() string {
 			return RandPassword()
 		}
 	}
+
 	return password.String()
 }

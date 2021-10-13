@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	log.SetFlags(log.Llongfile)
+	log.SetFlags(log.Lshortfile)
 
 	//优先从环境变量中读取监听端口
 	port, err := strconv.Atoi(os.Getenv("LIGHTSOCKS_SERVER_PORT"))
