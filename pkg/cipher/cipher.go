@@ -12,7 +12,7 @@ type Cipher struct {
 }
 
 // 新建一个编码解码器
-func NewCipher(encodePassword *password.Password) *Cipher {
+func New(encodePassword *password.Password) *Cipher {
 	decodePassword := &password.Password{}
 	for i, v := range encodePassword {
 		decodePassword[v] = byte(i)

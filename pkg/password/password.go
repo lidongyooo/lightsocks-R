@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-const PASSWORDLENGTH = 256
+const PasswordLength = 256
 
-type Password [PASSWORDLENGTH]byte
+type Password [PasswordLength]byte
 
 func init() {
 	// 更新随机种子，防止生成一样的随机密码
@@ -18,7 +18,7 @@ func init() {
 
 func ParsePassword(pwd string) (*Password, error)  {
 	bs, err := base64.StdEncoding.DecodeString(pwd)
-	if err != nil || len(bs) != PASSWORDLENGTH {
+	if err != nil || len(bs) != PasswordLength {
 		return nil, errors.New("不合法的密码")
 	}
 
@@ -36,7 +36,7 @@ func (p *Password) String() string {
 // 不能出现任何一个重复的byte位，必须又 0-255 组成，并且都需要包含
 func RandPassword() string {
 	// 随机生成一个由  0~255 组成的 byte 数组
-	intArr := rand.Perm(PASSWORDLENGTH)
+	intArr := rand.Perm(PasswordLength)
 
 	password := &Password{}
 	for i, v := range intArr {

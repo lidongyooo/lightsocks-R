@@ -13,7 +13,7 @@ type Server struct {
 	ListenAddr *net.TCPAddr
 }
 
-func NewLsServer(pw, listenAddr string) (*Server, error) {
+func New(pw, listenAddr string) (*Server, error) {
 	bsPassword, err := password.ParsePassword(pw)
 	if err != nil {
 		return nil, err
@@ -25,7 +25,7 @@ func NewLsServer(pw, listenAddr string) (*Server, error) {
 	}
 
 	return &Server{
-		Cipher: cipher.NewCipher(bsPassword),
+		Cipher: cipher.New(bsPassword),
 		ListenAddr: structListenAddr,
 	}, nil
 }

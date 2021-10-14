@@ -17,7 +17,6 @@ func main() {
 
 	//优先从环境变量中读取监听端口
 	port, err := strconv.Atoi(os.Getenv("LIGHTSOCKS_SERVER_PORT"))
-	log.Println(port, nil)
 	if err != nil {
 		port, err = freeport.GetFreePort()
 	}
@@ -34,7 +33,7 @@ func main() {
 	_config.ReadConfig()
 	_config.SaveConfig()
 
-	_server, err :=  server.NewLsServer(_config.Password, _config.ListenAddr)
+	_server, err :=  server.New(_config.Password, _config.ListenAddr)
 	if err != nil {
 		log.Fatalln(err)
 	}

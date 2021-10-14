@@ -13,6 +13,18 @@ type SecureTCPConn struct {
 	Cipher *cipher.Cipher
 }
 
+func DialTCPSecure(raddr *net.TCPAddr, c *cipher.Cipher) (*SecureTCPConn, error) {
+	conn, err := net.DialTCP("tcp", nil, raddr)
+	if err != nil {
+		return nil, err
+	}
+
+	return &SecureTCPConn{
+		ReadWriteCloser: conn,
+		Cipher: c,
+	}, nil
+}
+
 func ListenSecureTCP(laddr *net.TCPAddr, cipher *cipher.Cipher, handleConn func(localConn *SecureTCPConn), didListen func(listenAddr net.Addr)) error {
 	listener, err := net.ListenTCP("tcp", laddr)
 	if err != nil {
@@ -26,16 +38,16 @@ func ListenSecureTCP(laddr *net.TCPAddr, cipher *cipher.Cipher, handleConn func(
 	}
 
 	for {
-		localConn, err := listener.AcceptTCP()
+		conn, err := listener.AcceptTCP()
 		if err != nil {
 			log.Println(err)
 			continue
 		}
 
-		// localConn被关闭时直接清除所有数据 不管没有发送的数据
-		localConn.SetLinger(0)
+		// conn被关闭时直接清除所有数据 不管没有发送的数据
+		conn.SetLinger(0)
 		go handleConn(&SecureTCPConn{
-			ReadWriteCloser: localConn,
+			ReadWriteCloser: conn,
 			Cipher: cipher,
 		})
 	}
