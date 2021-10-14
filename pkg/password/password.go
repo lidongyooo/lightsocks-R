@@ -2,21 +2,33 @@ package password
 
 import (
 	"encoding/base64"
+	"errors"
 	"math/rand"
 	"time"
 )
 
 const PASSWORDLENGTH = 256
 
-type password [PASSWORDLENGTH]byte
+type Password [PASSWORDLENGTH]byte
 
 func init() {
 	// 更新随机种子，防止生成一样的随机密码
 	rand.Seed(time.Now().Unix())
 }
 
+func ParsePassword(pwd string) (*Password, error)  {
+	bs, err := base64.StdEncoding.DecodeString(pwd)
+	if err != nil || len(bs) != PASSWORDLENGTH {
+		return nil, errors.New("不合法的密码")
+	}
+
+	password := Password{}
+	copy(password[:], bs)
+	return &password, nil
+}
+
 // 采用base64编码把密码转换为字符串
-func (p *password) String() string {
+func (p *Password) String() string {
 	return base64.StdEncoding.EncodeToString(p[:])
 }
 
@@ -26,7 +38,7 @@ func RandPassword() string {
 	// 随机生成一个由  0~255 组成的 byte 数组
 	intArr := rand.Perm(PASSWORDLENGTH)
 
-	password := &password{}
+	password := &Password{}
 	for i, v := range intArr {
 		password[i] = byte(v)
 		if i == v {
