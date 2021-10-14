@@ -3,6 +3,7 @@ package password
 import (
 	"encoding/base64"
 	"errors"
+	"log"
 	"math/rand"
 	"time"
 )
@@ -46,6 +47,7 @@ func RandPassword() string {
 			return RandPassword()
 		}
 	}
+	log.Println(password)
 
 	return password.String()
 }

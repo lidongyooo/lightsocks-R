@@ -8,14 +8,11 @@ import (
 	"net"
 )
 
-const DefaultListenPort = 7448
 
 func main()  {
 	log.SetFlags(log.Lshortfile)
 
-	_config := &config.Config{
-		ListenAddr: fmt.Sprintf(":%d", DefaultListenPort),
-	}
+	_config := &config.Config{}
 
 	_config.ReadConfig()
 	_config.SaveConfig()

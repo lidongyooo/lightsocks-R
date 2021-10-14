@@ -30,7 +30,6 @@ func main() {
 		Password: password.RandPassword(),
 	}
 
-	_config.ReadConfig()
 	_config.SaveConfig()
 
 	_server, err :=  server.New(_config.Password, _config.ListenAddr)

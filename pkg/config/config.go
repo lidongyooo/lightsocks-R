@@ -42,7 +42,7 @@ func (c *Config) SaveConfig() {
 }
 
 func (c *Config) ReadConfig() {
-	if _, err := os.Stat(configPath); os.IsExist(err) {
+	if _, err := os.Stat(configPath); !os.IsNotExist(err) {
 		log.Printf("从文件 %s 中读取配置\n", configPath)
 
 		file, err := os.Open(configPath)

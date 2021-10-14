@@ -50,5 +50,12 @@ func (local *Local) handleConn(userConn *securetcp.SecureTCPConn) {
 		return
 	}
 
+	data := []byte("hello server")
+	n, err :=proxyServer.Write(data)
+	if err != nil {
+		 log.Fatalln(err)
+	}
+	log.Println(n)
+
 	defer proxyServer.Close()
 }
