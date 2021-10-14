@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/lidongyooo/lightsocks-R/pkg/cipher"
 	"github.com/lidongyooo/lightsocks-R/pkg/password"
-	"io"
+	"github.com/lidongyooo/lightsocks-R/pkg/securetcp"
 	"log"
 	"net"
 )
@@ -11,12 +11,6 @@ import (
 type Server struct {
 	Cipher *cipher.Cipher
 	ListenAddr *net.TCPAddr
-}
-
-// 加密传输的 TCP Socket
-type SecureTCPConn struct {
-	io.ReadWriteCloser
-	Cipher *cipher.Cipher
 }
 
 func NewLsServer(pw, listenAddr string) (*Server, error) {
@@ -37,37 +31,9 @@ func NewLsServer(pw, listenAddr string) (*Server, error) {
 }
 
 func (server *Server) Listen(didListen func(listenAddr net.Addr)) error {
-	return ListenSecureTCP(server.ListenAddr, server.Cipher, server.handleConn, didListen)
+	return securetcp.ListenSecureTCP(server.ListenAddr, server.Cipher, server.handleConn, didListen)
 }
 
-func (server *Server) handleConn (localConn *SecureTCPConn)  {
+func (server *Server) handleConn (localConn *securetcp.SecureTCPConn)  {
 	log.Println(localConn)
-}
-
-func ListenSecureTCP(laddr *net.TCPAddr, cipher *cipher.Cipher, handleConn func(localConn *SecureTCPConn), didListen func(listenAddr net.Addr)) error {
-	listener, err := net.ListenTCP("tcp", laddr)
-	if err != nil {
-		return err
-	}
-
-	defer listener.Close()
-
-	if didListen != nil {
-		didListen(listener.Addr())
-	}
-
-	for {
-		localConn, err := listener.AcceptTCP()
-		if err != nil {
-			log.Println(err)
-			continue
-		}
-
-		// localConn被关闭时直接清除所有数据 不管没有发送的数据
-		localConn.SetLinger(0)
-		go handleConn(&SecureTCPConn{
-			ReadWriteCloser: localConn,
-			Cipher: cipher,
-		})
-	}
 }
