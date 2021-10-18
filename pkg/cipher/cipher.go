@@ -11,6 +11,18 @@ type Cipher struct {
 	decodePassword *password.Password
 }
 
+func (cipher *Cipher) Decode(bs []byte) {
+	for i, v := range bs {
+		bs[i] = cipher.decodePassword[v]
+	}
+}
+
+func (cipher *Cipher) Encode (bs []byte) {
+	for i, v := range bs {
+		bs[i] = cipher.encodePassword[v]
+	}
+}
+
 // 新建一个编码解码器
 func New(encodePassword *password.Password) *Cipher {
 	decodePassword := &password.Password{}

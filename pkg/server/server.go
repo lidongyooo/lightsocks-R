@@ -4,7 +4,6 @@ import (
 	"github.com/lidongyooo/lightsocks-R/pkg/cipher"
 	"github.com/lidongyooo/lightsocks-R/pkg/password"
 	"github.com/lidongyooo/lightsocks-R/pkg/securetcp"
-	"log"
 	"net"
 )
 
@@ -35,5 +34,8 @@ func (server *Server) Listen(didListen func(listenAddr net.Addr)) error {
 }
 
 func (server *Server) handleConn (localConn *securetcp.SecureTCPConn)  {
-	log.Println(localConn)
+	defer localConn.Close()
+
+	//buffer := make([]byte, 256)
+	//_, err := localConn.
 }

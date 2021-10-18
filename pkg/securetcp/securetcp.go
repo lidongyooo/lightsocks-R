@@ -13,6 +13,21 @@ type SecureTCPConn struct {
 	Cipher *cipher.Cipher
 }
 
+func (secureSocket *SecureTCPConn) DecodeRead(bs []byte) (n int, err error) {
+	n, err = secureSocket.Read(bs)
+	if err != nil {
+		return
+	}
+
+	secureSocket.Cipher.Decode(bs)
+	return
+}
+
+func (secureSocket *SecureTCPConn) EncodeWrite(bs []byte) (n int, err error) {
+	secureSocket.Cipher.Encode(bs)
+	return secureSocket.Write(bs)
+}
+
 func DialTCPSecure(raddr *net.TCPAddr, c *cipher.Cipher) (*SecureTCPConn, error) {
 	conn, err := net.DialTCP("tcp", nil, raddr)
 	if err != nil {
